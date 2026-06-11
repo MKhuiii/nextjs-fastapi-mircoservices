@@ -1,5 +1,5 @@
-import NavigationBar from "@/components/ui/nav";
-import ProductList from "@/components/product-list";
+import NavigationBar from "@/src/components/ui/nav";
+import ProductList from "@/src/components/product-list";
 export default function Home() {
   return (
     <>

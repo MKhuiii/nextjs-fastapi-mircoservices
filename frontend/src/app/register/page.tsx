@@ -1,24 +1,41 @@
-import { Button } from "@/components/ui/button"
+'use client'
+import { useState, useTransition } from "react"
+import { Button } from "@/src/components/ui/button"
 import {
     Field,
-    FieldDescription,
     FieldGroup,
     FieldLabel,
-    FieldLegend,
-    FieldSeparator,
     FieldSet,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import NavigationBar from "@/components/ui/nav"
+} from "@/src/components/ui/field"
+import { Input } from "@/src/components/ui/input"
+import NavigationBar from "@/src/components/ui/nav"
+import { registerAccount } from "@/src/actions/athUser"
 export default function RegisterPage() {
+    const [msg, setMsg] = useState<{ success: boolean, text: string } | null>(null)
+    const [isPending, startTransition] = useTransition()
+
+    async function registerAction(formData: FormData) {
+        setMsg(null)
+        startTransition(async () => {
+            const res = await registerAccount(formData)
+            setMsg({ success: res.success, text: res.message })
+        })
+    }
+
     return (
         <>
             <NavigationBar></NavigationBar>
             <div className="max-w-full flex justify-center m-8">
-                <form method="POST" className="flex flex-col justify-items-center-safe w-lg border-2 p-4 rounded-2xl">
+                <form action={registerAction} className="flex flex-col justify-items-center-safe w-lg border-2 p-4 rounded-2xl">
                     <FieldGroup>
                         <FieldSet>
-                            <p className="text-center text-2xl font-bold">Sign In</p>
+                            <p className="text-center text-2xl font-bold">Register</p>
+                            {msg && (
+                                <p className={`text-center text-sm font-medium p-2 rounded mb-4 ${msg.success ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"
+                                    }`}>
+                                    {msg.text}
+                                </p>
+                            )}
                             <FieldGroup>
                                 <Field>
                                     <FieldLabel htmlFor="username">
@@ -26,8 +43,10 @@ export default function RegisterPage() {
                                     </FieldLabel>
                                     <Input
                                         id="username"
+                                        name="username"
                                         type="text"
                                         placeholder="Enter your username"
+                                        disabled={isPending}
                                         required
                                     />
                                 </Field>
@@ -37,8 +56,10 @@ export default function RegisterPage() {
                                     </FieldLabel>
                                     <Input
                                         id="email"
+                                        name="email"
                                         type="email"
                                         placeholder="example@gmail.com"
+                                        disabled={isPending}
                                         required
                                     />
                                 </Field>
@@ -48,8 +69,10 @@ export default function RegisterPage() {
                                     </FieldLabel>
                                     <Input
                                         id="pwd"
+                                        name="pwd"
                                         type="password"
                                         placeholder="*********"
+                                        disabled={isPending}
                                         required
                                     />
                                 </Field>
@@ -59,14 +82,18 @@ export default function RegisterPage() {
                                     </FieldLabel>
                                     <Input
                                         id="repwd"
+                                        name="repwd"
                                         type="password"
                                         placeholder="*********"
+                                        disabled={isPending}
                                         required
                                     />
                                 </Field>
                                 <Field orientation="horizontal" className="flex gap-2 justify-center">
-                                    <Button type="submit">Submit</Button>
-                                    <Button type="reset" variant="outline">
+                                    <Button type="submit" disabled={isPending}>
+                                        {isPending ? "Loading..." : "Register"}
+                                    </Button>
+                                    <Button type="reset" variant="outline" disabled={isPending}>
                                         Cancel
                                     </Button>
                                 </Field>

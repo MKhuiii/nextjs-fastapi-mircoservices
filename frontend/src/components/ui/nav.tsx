@@ -8,7 +8,7 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
     navigationMenuTriggerStyle
-} from "@/components/navigation-menu";
+} from "@/src/components/navigation-menu";
 export default function NavigationBar() {
     return (
         <div className="flex items-center justify-between w-full px-6 py-2 border-b text-3xl">

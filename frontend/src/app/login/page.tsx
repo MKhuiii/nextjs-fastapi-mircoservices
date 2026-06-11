@@ -1,4 +1,4 @@
-import NavigationBar from "@/components/ui/nav"
+import NavigationBar from "@/src/components/ui/nav"
 export default function LoginPage() {
     return (
         <>
