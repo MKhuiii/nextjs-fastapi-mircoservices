@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     FRONTEND_HOST: str
     BACKEND_USER_URL: str 
     USERS_DB_URL: str
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_DAYS: int = 1
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE_PATH), 

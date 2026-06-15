@@ -8,8 +8,7 @@ import {
     FieldSet,
 } from "@/src/components/ui/field"
 import { Input } from "@/src/components/ui/input"
-import NavigationBar from "@/src/components/ui/nav"
-import { registerAccount } from "@/src/actions/athUser"
+import { registerAccount } from "@/src/actions/authUser"
 export default function RegisterPage() {
     const [msg, setMsg] = useState<{ success: boolean, text: string } | null>(null)
     const [isPending, startTransition] = useTransition()
@@ -24,7 +23,6 @@ export default function RegisterPage() {
 
     return (
         <>
-            <NavigationBar></NavigationBar>
             <div className="max-w-full flex justify-center m-8">
                 <form action={registerAction} className="flex flex-col justify-items-center-safe w-lg border-2 p-4 rounded-2xl">
                     <FieldGroup>
