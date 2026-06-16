@@ -1,4 +1,6 @@
 from pydantic import BaseModel, EmailStr
+from uuid import UUID
+from pydantic import EmailStr
 
 class UserCreate(BaseModel):
     username: str 
@@ -13,3 +15,8 @@ class UserUpdate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class UserInfo(BaseModel):
+    user_id: UUID
+    username: str
+    email: EmailStr

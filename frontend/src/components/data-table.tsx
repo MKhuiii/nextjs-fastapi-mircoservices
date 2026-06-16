@@ -1,5 +1,6 @@
+'use client'
 import { MoreHorizontalIcon } from "lucide-react"
-
+import { useEffect, useState } from "react"
 import { Button } from "@/src/components/ui/button"
 import {
     DropdownMenu,
@@ -18,6 +19,14 @@ import {
 } from "@/src/components/ui/table"
 
 export default function DataTable() {
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        return null
+    }
     return (
         <Table>
             <TableHeader>

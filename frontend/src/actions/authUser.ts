@@ -11,6 +11,12 @@ export interface ActionResponse {
     message: string
 }
 
+export interface UserInfo {
+    user_id: string
+    username: string
+    email: string
+}
+
 export async function registerAccount(formData: FormData): Promise<ActionResponse> {
     try {
         const username = formData.get('username')?.toString().trim()
@@ -73,7 +79,7 @@ export async function loginUser(formData: FormData): Promise<ActionResponse> {
                 "password": pwd
             })
         })
-        const data = (await res.json()) as { access_token?: string, detail?: string }
+        const data = (await res.json()) as { access_token?: string, detail?: string, user?: UserInfo }
         if (!res.ok) {
             return {
                 success: false,
@@ -89,10 +95,17 @@ export async function loginUser(formData: FormData): Promise<ActionResponse> {
             maxAge: 60 * 60 * 24,
             path: '/',
         })
-        if (isSuccess) {
-            redirect('/manage')
+        if (data.user) {
+            cookieStore.set('user_info', JSON.stringify(data.user), {
+                httpOnly: false,
+                secure: true,
+                sameSite: 'lax',
+                maxAge: 60 * 60 * 24,
+                path: '/',
+            })
         }
-        return { success: true, message: 'Logged in successfully.' }
+        revalidatePath('/', 'layout')
+        isSuccess = true
     }
     catch (error) {
         return {
@@ -100,11 +113,19 @@ export async function loginUser(formData: FormData): Promise<ActionResponse> {
             message: 'An error occurred on the backend server'
         }
     }
+    if (isSuccess) {
+        redirect('/manage')
+    }
+    return {
+        success: false,
+        message: 'Login failed unexpectedly.'
+    }
 }
 
 export async function logoutAccount() {
     const cookieStore = await cookies()
     cookieStore.delete('user_auth')
+    cookieStore.delete('user_info')
 
     return { success: true, message: 'Logged out successfully.' }
 }
